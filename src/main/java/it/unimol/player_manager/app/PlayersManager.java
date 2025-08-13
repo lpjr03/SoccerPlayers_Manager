@@ -1,10 +1,5 @@
 package it.unimol.player_manager.app;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,10 +7,8 @@ import java.util.Map;
 
 import it.unimol.player_manager.entity.Player;
 import it.unimol.player_manager.exceptions.PlayerExistsException;
-import it.unimol.player_manager.persistence.PostgreConnection;
 
 public class PlayersManager implements Serializable {
-    private static PlayersManager instance;
     private static final long serialVersionUID = 1L;
     private int nextId;
     private HashMap<Integer, Player> players;

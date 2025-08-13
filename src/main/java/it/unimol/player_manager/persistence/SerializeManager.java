@@ -28,7 +28,7 @@ public class SerializeManager {
         } catch (IOException | ClassNotFoundException e) {
             // If file does not exist or cannot be loaded, create a new instance
             manager = new PlayersManager();
-            PostgreConnection driverConnection = new PostgreConnection();
+            PostgreConnection driverConnection = PostgreConnection.getInstance();
             driverConnection.createDatabase("calcio");
             return manager;
         }

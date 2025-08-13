@@ -10,8 +10,16 @@ public class PostgreConnection {
     private String url = "jdbc:postgresql://localhost:5432/calcio";
     private String user = "lelio";
     private String pass = "Oilel2025+";
+    private static PostgreConnection instance;
 
-    public PostgreConnection() {
+    public static PostgreConnection getInstance() {
+        if (instance == null) {
+            instance = new PostgreConnection();
+        }
+        return instance;
+    }
+
+    private PostgreConnection() {
 
         try (Connection conn = DriverManager.getConnection(url, user, pass)) {
             System.out.println("Connected to PostgreSQL!");
@@ -30,14 +38,16 @@ public class PostgreConnection {
         }
     }
 
-    public void createDatabase(String dbName) {
+    public boolean createDatabase(String dbName) {
         String sql = "CREATE DATABASE " + dbName;
         try (Connection conn = DriverManager.getConnection(url, user, pass);
                 Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
             System.out.println("Database created successfully!");
+            return true;
         } catch (SQLException e) {
             System.out.println("Database creation failed: " + e.getMessage());
+            return false;
         }
     }
 }

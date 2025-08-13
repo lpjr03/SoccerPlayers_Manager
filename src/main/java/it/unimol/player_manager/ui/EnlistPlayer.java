@@ -38,8 +38,8 @@ public class EnlistPlayer {
         System.out.print("Enter nationality: ");
         String nationality = input.nextLine();
 
-        int jerseyNumber=-1;
-        while(jerseyNumber==-1) {
+        int jerseyNumber = -1;
+        while (jerseyNumber == -1) {
             System.out.print("Enter jersey number: ");
             try {
                 jerseyNumber = Integer.parseInt(input.nextLine());

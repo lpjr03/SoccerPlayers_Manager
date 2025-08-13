@@ -34,7 +34,7 @@ public class MainMenu {
 
     public void execute() {
         System.out.println("Welcome to the Player Manager!");
-        PostgreConnection driverConnection = new PostgreConnection();
+        PostgreConnection driverConnection = PostgreConnection.getInstance();
         boolean exit = false;
         do {
             this.showOptions();
