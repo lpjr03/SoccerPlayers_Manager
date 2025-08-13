@@ -29,7 +29,6 @@ public class SerializeManager {
             // If file does not exist or cannot be loaded, create a new instance
             manager = new PlayersManager();
             PostgreConnection driverConnection = PostgreConnection.getInstance();
-            driverConnection.createDatabase("calcio");
             return manager;
         }
     }
