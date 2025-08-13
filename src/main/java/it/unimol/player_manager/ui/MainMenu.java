@@ -1,11 +1,11 @@
 package it.unimol.player_manager.ui;
 
 import java.io.IOException;
-import java.sql.Driver;
 import java.util.Scanner;
 
 import it.unimol.player_manager.app.PlayersManager;
 import it.unimol.player_manager.persistence.PostgreConnection;
+import it.unimol.player_manager.persistence.SerializeManager;
 
 public class MainMenu {
     private static MainMenu instance;
@@ -15,7 +15,7 @@ public class MainMenu {
     private MainMenu() {
         input = new Scanner(System.in);
         try {
-            playersManager = PlayersManager.loadFromFile("manager.sr");
+            playersManager = SerializeManager.loadFromFile("manager.sr");
         } catch (ClassNotFoundException e) {
             System.out.println("Class not found");
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class MainMenu {
             exit = this.handleOption(option);
         } while (!exit);
         try {
-            playersManager.saveToFile("manager.sr");
+            SerializeManager.saveToFile("manager.sr");
         } catch (IOException e) {
             System.out.println("Error saving players manager");
             e.printStackTrace();

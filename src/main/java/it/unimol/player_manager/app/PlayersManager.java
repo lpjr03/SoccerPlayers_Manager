@@ -53,26 +53,10 @@ public class PlayersManager implements Serializable {
         return true;
     }
 
-    // Serialization: save manager to file
-    public void saveToFile(String filePath) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(filePath))) {
-            oos.writeObject(this);
-        }
-    }
-
-    // Deserialization: load manager from file
-    public static PlayersManager loadFromFile(String filePath) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(
-                new FileInputStream(filePath))) {
-            instance = (PlayersManager) ois.readObject();
-            return instance;
-        } catch (IOException | ClassNotFoundException e) {
-            // If file does not exist or cannot be loaded, create a new instance
-            instance = new PlayersManager();
-            PostgreConnection driverConnection = new PostgreConnection();
-            driverConnection.createDatabase("calcio");
-            return instance;
-        }
+    public Player getPlayerByJersey(int jerseyNumber) {
+        return players.values().stream()
+                .filter(player -> player.getJerseyNumber() == jerseyNumber)
+                .findFirst()
+                .orElse(null);
     }
 }

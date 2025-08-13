@@ -9,27 +9,28 @@ import java.io.ObjectOutputStream;
 import it.unimol.player_manager.app.PlayersManager;
 
 public class SerializeManager {
+
+    private static PlayersManager manager;
+
     // Serialization: save manager to file
-    public void saveToFile(String filePath) throws IOException {
+    public static void saveToFile(String filePath) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(filePath))) {
-            oos.writeObject(this);
+            oos.writeObject(manager);
         }
     }
 
     // Deserialization: load manager from file
     public static PlayersManager loadFromFile(String filePath) throws IOException, ClassNotFoundException {
-        PlayersManager instance;
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(filePath))) {
-            instance = (PlayersManager) ois.readObject();
-            return instance;
+            return (PlayersManager) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             // If file does not exist or cannot be loaded, create a new instance
-            instance = new PlayersManager();
+            manager = new PlayersManager();
             PostgreConnection driverConnection = new PostgreConnection();
             driverConnection.createDatabase("calcio");
-            return instance;
+            return manager;
         }
     }
 }
