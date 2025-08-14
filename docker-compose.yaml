@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   db:
     image: postgres
@@ -12,6 +11,8 @@ services:
       POSTGRES_DB: calcio
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -23,7 +24,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: Oilel2025+
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - backend
 
 volumes:
   local_pgdata:
   pgadmin-data:
+
+networks:
+  backend:
+    driver: bridge
