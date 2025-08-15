@@ -94,4 +94,14 @@ public class PostgreConnection {
             e.printStackTrace();
         }
     }
+
+    public void deletePlayer(int jerseyNumber) {
+        String sql = "DELETE FROM players WHERE jersey_number = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, jerseyNumber);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

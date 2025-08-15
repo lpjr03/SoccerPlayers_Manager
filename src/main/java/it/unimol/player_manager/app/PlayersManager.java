@@ -7,6 +7,7 @@ import java.util.Map;
 
 import it.unimol.player_manager.entity.Player;
 import it.unimol.player_manager.exceptions.PlayerExistsException;
+import it.unimol.player_manager.exceptions.PlayerNotExistsException;
 import it.unimol.player_manager.persistence.PostgreConnection;
 
 public class PlayersManager implements Serializable {
@@ -47,10 +48,15 @@ public class PlayersManager implements Serializable {
             throw new IllegalArgumentException("Player does not exist");
         }
         players.values().removeIf(player -> player.getJerseyNumber() == jerseyNumber);
+        PostgreConnection.getInstance().deletePlayer(jerseyNumber);
         return true;
     }
 
     public Player getPlayerByJersey(int jerseyNumber) {
+
+        if(this.players.isEmpty())
+            throw new PlayerNotExistsException("No players found in the manager, please add players first.");
+            
         return players.values().stream()
                 .filter(player -> player.getJerseyNumber() == jerseyNumber)
                 .findFirst()
