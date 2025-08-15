@@ -7,6 +7,7 @@ import java.util.Map;
 
 import it.unimol.player_manager.entity.Player;
 import it.unimol.player_manager.exceptions.PlayerExistsException;
+import it.unimol.player_manager.persistence.PostgreConnection;
 
 public class PlayersManager implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -25,9 +26,12 @@ public class PlayersManager implements Serializable {
         if (playerExists(player.getJerseyNumber())) {
             throw new PlayerExistsException("Player already exists");
         }
-        int id = nextId++;
+        nextId++;
+        int id = nextId;
         players.put(id, player);
+        PostgreConnection.getInstance().insertPlayer(player);
         return id;
+
     }
 
     public Map<Integer, Player> getPlayers() {

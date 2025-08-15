@@ -1,9 +1,14 @@
 package it.unimol.player_manager.persistence;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import it.unimol.player_manager.entity.Player;
 
 public class PostgreConnection {
 
@@ -22,17 +27,17 @@ public class PostgreConnection {
     }
 
     private PostgreConnection() {
-        dbName = "calcio";
-        user = "lelio";
-        pass = "Oilel2025+";
-        urlCalcio = "jdbc:postgresql://localhost:5432/calcio";
+        dbName = Dotenv.load().get("POSTGRES_DB");
+        user = Dotenv.load().get("POSTGRES_USER");
+        pass = Dotenv.load().get("POSTGRES_PASSWORD");
+        urlCalcio = "jdbc:postgresql://localhost:5432/" + dbName;
         try {
             connection = DriverManager.getConnection(urlCalcio, user, pass);
             createDatabaseIfNotExists();
             createPlayersTable(connection);
-            System.out.println("Connected to 'calcio' and checked/created table 'players'.");
+            System.out.println("Connected to '" + dbName + "' and checked/created table 'players'.");
         } catch (SQLException e) {
-            System.out.println("Connection to 'calcio' failed: " + e.getMessage());
+            System.out.println("Connection to '" + dbName + "' failed: " + e.getMessage());
         }
     }
 
@@ -70,6 +75,23 @@ public class PostgreConnection {
                 System.out.println("Database '" + dbName + "' already exists.");
             }
 
+        }
+    }
+
+    public void insertPlayer(Player player) {
+        try (PreparedStatement stmt = connection.prepareStatement(
+                "INSERT INTO players (first_name, last_name, birth_date, nationality, jersey_number, abilities) VALUES (?, ?, ?, ?, ?, ?::jsonb)")) {
+
+            stmt.setString(1, player.getFirstName());
+            stmt.setString(2, player.getLastName());
+            stmt.setDate(3, Date.valueOf(player.getBirthDate()));
+            stmt.setString(4, player.getNationality());
+            stmt.setInt(5, player.getJerseyNumber());
+            stmt.setString(6, player.abilitiesToJson());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
