@@ -7,12 +7,12 @@ import java.sql.Statement;
 
 public class PostgreConnection {
 
-    private String dbName = "calcio";
-    private String user = "lelio";
-    private String pass = "Oilel2025+";
-    private String urlPostgres = "jdbc:postgresql://localhost:5432/postgres";
-    private String urlCalcio = "jdbc:postgresql://localhost:5432/calcio";
+    private String dbName;
+    private String user;
+    private String pass;
+    private String urlCalcio;
     private static PostgreConnection instance;
+    private Connection connection;
 
     public static PostgreConnection getInstance() {
         if (instance == null) {
@@ -22,9 +22,14 @@ public class PostgreConnection {
     }
 
     private PostgreConnection() {
-        createDatabaseIfNotExists();
-        try (Connection conn = DriverManager.getConnection(urlCalcio, user, pass)) {
-            createPlayersTable(conn);
+        dbName = "calcio";
+        user = "lelio";
+        pass = "Oilel2025+";
+        urlCalcio = "jdbc:postgresql://localhost:5432/calcio";
+        try {
+            connection = DriverManager.getConnection(urlCalcio, user, pass);
+            createDatabaseIfNotExists();
+            createPlayersTable(connection);
             System.out.println("Connected to 'calcio' and checked/created table 'players'.");
         } catch (SQLException e) {
             System.out.println("Connection to 'calcio' failed: " + e.getMessage());
@@ -51,19 +56,10 @@ public class PostgreConnection {
         return false;
     }
 
-    public String query(String sql) {
-        try (Connection conn = DriverManager.getConnection(urlPostgres, user, pass);
-                Statement stmt = conn.createStatement()) {
-            return stmt.executeQuery(sql).toString();
-        } catch (SQLException e) {
-            System.out.println("Query failed: " + e.getMessage());
-            return "Query failed: " + e.getMessage();
-        }
-    }
+    private void createDatabaseIfNotExists() throws SQLException {
 
-    private void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection(urlPostgres, user, pass);
-             Statement stmt = conn.createStatement()) {
+        Statement stmt = connection.createStatement();
+        {
             String checkDb = "SELECT 1 FROM pg_database WHERE datname = '" + dbName + "'";
             var rs = stmt.executeQuery(checkDb);
             if (!rs.next()) {
@@ -73,8 +69,7 @@ public class PostgreConnection {
             } else {
                 System.out.println("Database '" + dbName + "' already exists.");
             }
-        } catch (SQLException e) {
-            System.out.println("Database creation/check failed: " + e.getMessage());
+
         }
     }
 }
