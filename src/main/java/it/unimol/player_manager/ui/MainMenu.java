@@ -14,15 +14,8 @@ public class MainMenu {
 
     private MainMenu() {
         input = new Scanner(System.in);
-        try {
-            playersManager = SerializeManager.loadFromFile("manager.sr");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Error loading players manager");
-            e.printStackTrace();
-        }
+        this.loadPlayersManager();
+        PostgreConnection.getInstance();
     }
 
     public static MainMenu getInstance() {
@@ -34,20 +27,14 @@ public class MainMenu {
 
     public void execute() {
         System.out.println("Welcome to the Player Manager!");
-        PostgreConnection driverConnection = PostgreConnection.getInstance();
         boolean exit = false;
         do {
             this.showOptions();
             System.out.println("Choose an option: ");
             int option = Integer.parseInt(input.nextLine());
             exit = this.handleOption(option);
+            this.savePlayersManager();
         } while (!exit);
-        try {
-            SerializeManager.saveToFile("manager.sr");
-        } catch (IOException e) {
-            System.out.println("Error saving players manager");
-            e.printStackTrace();
-        }
         System.out.println("Exiting Player Manager. Goodbye!");
 
         input.close();
@@ -71,5 +58,24 @@ public class MainMenu {
             default -> System.out.println("Invalid option. Please try again.");
         }
         return false;
+    }
+
+    private void loadPlayersManager() {
+        try {
+            playersManager = SerializeManager.loadFromFile("manager.sr");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        } catch (IOException e) {
+            System.out.println("Error loading players manager");
+        }
+
+    }
+
+    private void savePlayersManager() {
+        try {
+            SerializeManager.saveToFile("manager.sr");
+        } catch (IOException e) {
+            System.out.println("Error saving players manager");
+        }
     }
 }
