@@ -14,4 +14,20 @@ public class Player implements Serializable {
     private String nationality;
     private int jerseyNumber;
     private EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
+
+    public String abilitiesToJson() {
+        StringBuilder json = new StringBuilder("{");
+        int count = 0;
+        for (var entry : abilities.entrySet()) {
+            json.append("\"")
+                    .append(entry.getKey().name())
+                    .append("\": ")
+                    .append(entry.getValue());
+            if (++count < abilities.size()) {
+                json.append(", ");
+            }
+        }
+        json.append("}");
+        return json.toString();
+    }
 }
