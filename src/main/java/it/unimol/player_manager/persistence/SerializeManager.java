@@ -26,9 +26,8 @@ public class SerializeManager {
                 new FileInputStream(filePath))) {
             return (PlayersManager) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            // If file does not exist or cannot be loaded, create a new instance
-            manager = new PlayersManager();
-            PostgreConnection driverConnection = PostgreConnection.getInstance();
+            manager = PlayersManager.getInstance();
+            PostgreConnection.getInstance();
             return manager;
         }
     }

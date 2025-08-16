@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import it.unimol.player_manager.app.PlayersManager;
-import it.unimol.player_manager.persistence.PostgreConnection;
 import it.unimol.player_manager.persistence.SerializeManager;
 
 public class MainMenu {
@@ -15,7 +14,6 @@ public class MainMenu {
     private MainMenu() {
         input = new Scanner(System.in);
         this.loadPlayersManager();
-        PostgreConnection.getInstance();
     }
 
     public static MainMenu getInstance() {
