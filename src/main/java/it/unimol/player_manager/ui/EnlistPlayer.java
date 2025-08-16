@@ -11,6 +11,7 @@ import it.unimol.player_manager.entity.Player;
 import it.unimol.player_manager.exceptions.PlayerExistsException;
 import lombok.AllArgsConstructor;
 
+/** Class for enlisting a new player. */
 @AllArgsConstructor
 public class EnlistPlayer {
 
@@ -18,6 +19,9 @@ public class EnlistPlayer {
 
     private PlayersManager playersManager;
 
+    /**
+     * Executes the player enlistment process.
+     */
     public void execute() {
         System.out.println("Enlisting a new player...");
         // Logic to enlist a new player

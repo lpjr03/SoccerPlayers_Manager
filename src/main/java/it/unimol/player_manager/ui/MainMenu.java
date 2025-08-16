@@ -6,16 +6,27 @@ import java.util.Scanner;
 import it.unimol.player_manager.app.PlayersManager;
 import it.unimol.player_manager.persistence.SerializeManager;
 
+/**
+ * Main menu class for the Player Manager application.
+ */
 public class MainMenu {
     private static MainMenu instance;
     public static Scanner input;
     private PlayersManager playersManager;
 
+    /**
+     * Private constructor to prevent instantiation from outside the class.
+     */
     private MainMenu() {
         input = new Scanner(System.in);
         this.loadPlayersManager();
     }
 
+    /**
+     * Returns the singleton instance of the MainMenu.
+     *
+     * @return the MainMenu instance
+     */
     public static MainMenu getInstance() {
         if (instance == null) {
             instance = new MainMenu();
@@ -23,6 +34,9 @@ public class MainMenu {
         return instance;
     }
 
+    /**
+     * Executes the main menu.
+     */
     public void execute() {
         System.out.println("Welcome to the Player Manager!");
         boolean exit = false;
@@ -37,6 +51,9 @@ public class MainMenu {
         input.close();
     }
 
+    /**
+     * Shows the available options in the main menu.
+     */
     private void showOptions() {
         System.out.println("F1: Enlist player");
         System.out.println("F2: Remove player");
@@ -44,6 +61,12 @@ public class MainMenu {
         System.out.println("F4: Exit");
     }
 
+    /**
+     * Handles the selected menu option.
+     *
+     * @param option the selected option
+     * @return true if the application should exit, false otherwise
+     */
     private boolean handleOption(int option) {
         switch (option) {
             case 1 -> new EnlistPlayer(input, playersManager).execute();
@@ -57,6 +80,9 @@ public class MainMenu {
         return false;
     }
 
+    /**
+     * Loads the PlayersManager from a file.
+     */
     private void loadPlayersManager() {
         try {
             playersManager = SerializeManager.loadFromFile("manager.sr");
@@ -68,6 +94,9 @@ public class MainMenu {
 
     }
 
+    /**
+     * Saves the current state of the PlayersManager to a file.
+     */
     private void savePlayersManager() {
         try {
             SerializeManager.saveToFile("manager.sr");
