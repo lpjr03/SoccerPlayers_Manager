@@ -71,8 +71,9 @@ public class EnlistPlayer {
         player.setAbilities(skillMap);
 
         try {
-            playersManager.addPlayer(player);
-            System.out.println("Player enlisted successfully!");
+            if (playersManager.addPlayer(player)) {
+                System.out.println("Player enlisted successfully!");
+            }
         } catch (PlayerExistsException e) {
             System.out.println("Error: " + e.getMessage());
         }

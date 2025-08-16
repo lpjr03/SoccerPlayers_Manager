@@ -33,10 +33,9 @@ public class MainMenu {
             System.out.println("Choose an option: ");
             int option = Integer.parseInt(input.nextLine());
             exit = this.handleOption(option);
-            this.savePlayersManager();
         } while (!exit);
         System.out.println("Exiting Player Manager. Goodbye!");
-
+        this.savePlayersManager();
         input.close();
     }
 
