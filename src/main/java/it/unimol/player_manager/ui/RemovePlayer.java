@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import it.unimol.player_manager.app.PlayersManager;
 import it.unimol.player_manager.entity.Player;
+import it.unimol.player_manager.exceptions.EmptyManagerException;
 import it.unimol.player_manager.exceptions.PlayerNotExistsException;
 import lombok.AllArgsConstructor;
 
@@ -41,7 +42,7 @@ public class RemovePlayer {
                 playersManager.removePlayer(jerseyNumber);
                 System.out.println("Player removed successfully!");
             }
-        } catch (IllegalArgumentException | PlayerNotExistsException e) {
+        } catch (IllegalArgumentException | PlayerNotExistsException | EmptyManagerException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

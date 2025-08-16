@@ -74,7 +74,7 @@ public class EnlistPlayer {
             if (playersManager.addPlayer(player)) {
                 System.out.println("Player enlisted successfully!");
             }
-        } catch (PlayerExistsException e) {
+        } catch (PlayerExistsException | IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.unimol.player_manager.entity.Player;
+import it.unimol.player_manager.exceptions.EmptyManagerException;
 import it.unimol.player_manager.exceptions.PlayerExistsException;
 import it.unimol.player_manager.exceptions.PlayerNotExistsException;
 import it.unimol.player_manager.persistence.PostgreConnection;
@@ -14,13 +15,21 @@ public class PlayersManager implements Serializable {
     private static final long serialVersionUID = 1L;
     private int nextId;
     private HashMap<Integer, Player> players;
+    private static PlayersManager instance;
 
-    public PlayersManager() {
+    private PlayersManager() {
         this.nextId = 0;
         this.players = new HashMap<>();
     }
 
-    public int addPlayer(Player player) {
+    public static PlayersManager getInstance() {
+        if (instance == null) {
+            instance = new PlayersManager();
+        }
+        return instance;
+    }
+
+    public boolean addPlayer(Player player) {
         if (player == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -31,8 +40,7 @@ public class PlayersManager implements Serializable {
         int id = nextId;
         players.put(id, player);
         PostgreConnection.getInstance().insertPlayer(player);
-        return id;
-
+        return true;
     }
 
     public Map<Integer, Player> getPlayers() {
@@ -45,7 +53,7 @@ public class PlayersManager implements Serializable {
 
     public boolean removePlayer(int jerseyNumber) {
         if (!playerExists(jerseyNumber)) {
-            throw new IllegalArgumentException("Player does not exist");
+            throw new PlayerNotExistsException("Player does not exist");
         }
         players.values().removeIf(player -> player.getJerseyNumber() == jerseyNumber);
         PostgreConnection.getInstance().deletePlayer(jerseyNumber);
@@ -53,10 +61,8 @@ public class PlayersManager implements Serializable {
     }
 
     public Player getPlayerByJersey(int jerseyNumber) {
-
-        if(this.players.isEmpty())
-            throw new PlayerNotExistsException("No players found in the manager, please add players first.");
-            
+        if (this.players.isEmpty())
+            throw new EmptyManagerException();
         return players.values().stream()
                 .filter(player -> player.getJerseyNumber() == jerseyNumber)
                 .findFirst()
