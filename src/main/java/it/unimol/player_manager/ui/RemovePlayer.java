@@ -8,6 +8,9 @@ import it.unimol.player_manager.exceptions.EmptyManagerException;
 import it.unimol.player_manager.exceptions.PlayerNotExistsException;
 import lombok.AllArgsConstructor;
 
+/**
+ * Class for removing a player.
+ */
 @AllArgsConstructor
 public class RemovePlayer {
 
@@ -15,6 +18,9 @@ public class RemovePlayer {
 
     private PlayersManager playersManager;
 
+    /**
+     * Executes the removal of a player.
+     */
     public void execute() {
 
         int jerseyNumber = -1;
