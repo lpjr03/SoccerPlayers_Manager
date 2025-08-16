@@ -6,6 +6,9 @@ import java.util.EnumMap;
 
 import lombok.Data;
 
+/**
+ * Class representing a player in the system.
+ */
 @Data
 public class Player implements Serializable {
     private String firstName;
@@ -15,6 +18,11 @@ public class Player implements Serializable {
     private int jerseyNumber;
     private EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
 
+    /**
+     * Converts the player's abilities to a JSON string.
+     *
+     * @return a JSON representation of the player's abilities
+     */
     public String abilitiesToJson() {
         StringBuilder json = new StringBuilder("{");
         int count = 0;
