@@ -1,41 +1,46 @@
-name: Docker Release
+name: Build and Deploy Docker Image
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
     tags:
       - 'v*'
-  workflow_dispatch:
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Log in to DockerHub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: your-dockerhub-user/your-image
+      - name: Extract version from tag
+        id: tag_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        
+      - name: Create temporary .env file
+        run: |
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> .env
+          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> .env
 
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ github.ref == 'refs/heads/main' && 'your-dockerhub-user/your-image:latest' || '' }}
-            ${{ startsWith(github.ref, 'refs/tags/v') && 'your-dockerhub-user/your-image:${{ github.ref_name }}' || '' }}
-            ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v') && format('your-dockerhub-user/your-image:{0}', github.run_id) || '' }}
-          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soccerplayers_manager:${{ env.VERSION }} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/soccerplayers_manager:${{ env.VERSION }}
+
+      - name: Remove temporary .env file
+        run: rm .env
+
+      - name: Tag as latest and push
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/soccerplayers_manager:${{ env.VERSION }} ${{ secrets.DOCKERHUB_USERNAME }}/soccerplayers_manager:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/soccerplayers_manager:latest

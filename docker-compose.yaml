@@ -1,4 +1,16 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    image: soccer_players_manager
+    container_name: soccer_players_manager
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
   db:
     image: postgres
     container_name: players_db
@@ -30,6 +42,7 @@ services:
 volumes:
   local_pgdata:
   pgadmin-data:
+
 
 networks:
   backend:
