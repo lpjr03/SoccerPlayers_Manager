@@ -10,10 +10,13 @@ import it.unimol.player_manager.app.PlayersManager;
 
 public class SerializeManager {
 
+    /**
+     * Singleton instance of {@link PlayersManager} used for managing player data serialization.
+     */
     private static PlayersManager manager;
 
     // Serialization: save manager to file
-    public static void saveToFile(String filePath) throws IOException {
+    public static void saveToFile(final String filePath) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(filePath))) {
             oos.writeObject(manager);
@@ -21,7 +24,7 @@ public class SerializeManager {
     }
 
     // Deserialization: load manager from file
-    public static PlayersManager loadFromFile(String filePath) throws IOException, ClassNotFoundException {
+    public static PlayersManager loadFromFile(final String filePath) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(filePath))) {
             return (PlayersManager) ois.readObject();

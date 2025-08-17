@@ -10,13 +10,22 @@ import java.sql.Statement;
 import io.github.cdimascio.dotenv.Dotenv;
 import it.unimol.player_manager.entity.Player;
 
-public class PostgreConnection {
-
+/**
+ * Manages the connection and operations on the PostgreSQL database for players.
+ */
+public final class PostgreConnection {
+    
+    /** Database name. */
     private String dbName;
+    /** Username for the database. */
     private String user;
+    /** Password for the database. */
     private String pass;
+    /** Database connection URL. */
     private String urlCalcio;
+    /** Singleton instance. */
     private static PostgreConnection instance;
+    /** Database connection. */
     private Connection connection;
 
     public static PostgreConnection getInstance() {
@@ -41,16 +50,16 @@ public class PostgreConnection {
         }
     }
 
-    private boolean createPlayersTable(Connection conn) {
-        String sql = "CREATE TABLE IF NOT EXISTS players (" +
-                "id SERIAL PRIMARY KEY, " +
-                "first_name VARCHAR(50) NOT NULL, " +
-                "last_name VARCHAR(50) NOT NULL, " +
-                "birth_date DATE NOT NULL, " +
-                "nationality VARCHAR(50) NOT NULL, " +
-                "jersey_number INTEGER NOT NULL, " +
-                "abilities JSONB NOT NULL" +
-                ")";
+    private boolean createPlayersTable(final Connection conn) {
+        final String sql = "CREATE TABLE IF NOT EXISTS players ("
+                + "id SERIAL PRIMARY KEY, "
+                + "first_name VARCHAR(50) NOT NULL, "
+                + "last_name VARCHAR(50) NOT NULL, "
+                + "birth_date DATE NOT NULL, "
+                + "nationality VARCHAR(50) NOT NULL, "
+                + "jersey_number INTEGER NOT NULL, "
+                + "abilities JSONB NOT NULL"
+                + ")";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
             System.out.println("Table 'players' checked/created.");
@@ -62,32 +71,34 @@ public class PostgreConnection {
     }
 
     private void createDatabaseIfNotExists() throws SQLException {
-
-        Statement stmt = connection.createStatement();
-        {
-            String checkDb = "SELECT 1 FROM pg_database WHERE datname = '" + dbName + "'";
-            var rs = stmt.executeQuery(checkDb);
-            if (!rs.next()) {
-                String sql = "CREATE DATABASE " + dbName;
-                stmt.executeUpdate(sql);
-                System.out.println("Database '" + dbName + "' created successfully!");
-            } else {
-                System.out.println("Database '" + dbName + "' already exists.");
-            }
-
+        final Statement stmt = connection.createStatement();
+        final String checkDb = "SELECT 1 FROM pg_database WHERE datname = '" + dbName + "'";
+        final var rs = stmt.executeQuery(checkDb);
+        if (!rs.next()) {
+            final String sql = "CREATE DATABASE " + dbName;
+            stmt.executeUpdate(sql);
+            System.out.println("Database '" + dbName + "' created successfully!");
+        } else {
+            System.out.println("Database '" + dbName + "' already exists.");
         }
     }
 
-    public void insertPlayer(Player player) {
+    public void insertPlayer(final Player player) {
+        final int FIRST_NAME_INDEX = 1;
+        final int LAST_NAME_INDEX = 2;
+        final int BIRTH_DATE_INDEX = 3;
+        final int NATIONALITY_INDEX = 4;
+        final int JERSEY_NUMBER_INDEX = 5;
+        final int ABILITIES_INDEX = 6;
         try (PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO players (first_name, last_name, birth_date, nationality, jersey_number, abilities) VALUES (?, ?, ?, ?, ?, ?::jsonb)")) {
 
-            stmt.setString(1, player.getFirstName());
-            stmt.setString(2, player.getLastName());
-            stmt.setDate(3, Date.valueOf(player.getBirthDate()));
-            stmt.setString(4, player.getNationality());
-            stmt.setInt(5, player.getJerseyNumber());
-            stmt.setString(6, player.abilitiesToJson());
+            stmt.setString(FIRST_NAME_INDEX, player.getFirstName());
+            stmt.setString(LAST_NAME_INDEX, player.getLastName());
+            stmt.setDate(BIRTH_DATE_INDEX, Date.valueOf(player.getBirthDate()));
+            stmt.setString(NATIONALITY_INDEX, player.getNationality());
+            stmt.setInt(JERSEY_NUMBER_INDEX, player.getJerseyNumber());
+            stmt.setString(ABILITIES_INDEX, player.abilitiesToJson());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -95,8 +106,8 @@ public class PostgreConnection {
         }
     }
 
-    public void deletePlayer(int jerseyNumber) {
-        String sql = "DELETE FROM players WHERE jersey_number = ?";
+    public void deletePlayer(final int jerseyNumber) {
+        final String sql = "DELETE FROM players WHERE jersey_number = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, jerseyNumber);
             stmt.executeUpdate();

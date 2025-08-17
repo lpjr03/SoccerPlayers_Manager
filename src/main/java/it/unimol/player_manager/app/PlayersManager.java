@@ -22,10 +22,22 @@ import it.unimol.player_manager.persistence.PostgreConnection;
  * @author leliopalmix
  * @version 1.0
  */
-public class PlayersManager implements Serializable {
+public final class PlayersManager implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Next available player ID.
+     */
     private int nextId;
-    private HashMap<Integer, Player> players;
+
+    /**
+     * Map of player IDs to Player objects.
+     */
+    private java.util.Map<Integer, Player> players;
+
+    /**
+     * Singleton instance of PlayersManager.
+     */
     private static PlayersManager instance;
 
     /**
@@ -33,7 +45,7 @@ public class PlayersManager implements Serializable {
     */
     private PlayersManager() {
         this.nextId = 0;
-        this.players = new HashMap<>();
+        this.players = new java.util.HashMap<>();
     }
 
     /**
@@ -54,7 +66,7 @@ public class PlayersManager implements Serializable {
      * @param player the Player object to add
      * @return true if the player was added successfully, false otherwise
      */
-    public boolean addPlayer(Player player) {
+    public boolean addPlayer(final Player player) {
         if (player == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -62,7 +74,7 @@ public class PlayersManager implements Serializable {
             throw new PlayerExistsException();
         }
         nextId++;
-        int id = nextId;
+        final int id = nextId;
 
         assert players != null : "Players map should not be null";
         players.put(id, player);
@@ -76,7 +88,7 @@ public class PlayersManager implements Serializable {
      * @param jerseyNumber the jersey number to check
      * @return true if the player exists, false otherwise
      */
-    private boolean playerExists(int jerseyNumber) {
+    private boolean playerExists(final int jerseyNumber) {
         return players.values().stream().anyMatch(player -> player.getJerseyNumber() == jerseyNumber);
     }
 
@@ -86,7 +98,7 @@ public class PlayersManager implements Serializable {
      * @param jerseyNumber the jersey number of the player to remove
      * @return true if the player was removed successfully, false otherwise
      */
-    public boolean removePlayer(int jerseyNumber) {
+    public boolean removePlayer(final int jerseyNumber) {
 
         assert players != null : "Players map should not be null";
         if (!playerExists(jerseyNumber)) {
@@ -103,9 +115,10 @@ public class PlayersManager implements Serializable {
      * @param jerseyNumber the jersey number of the player to retrieve
      * @return the Player object if found, null otherwise
      */
-    public Player getPlayerByJersey(int jerseyNumber) {
-        if (this.players.isEmpty())
+    public Player getPlayerByJersey(final int jerseyNumber) {
+        if (this.players.isEmpty()) {
             throw new EmptyManagerException();
+        }
 
         assert players != null : "Players map should not be null";
         return players.values().stream()

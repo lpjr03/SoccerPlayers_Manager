@@ -15,8 +15,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class EnlistPlayer {
 
+    /**
+     * Scanner for user input.
+     */
     private Scanner input;
 
+    /**
+     * Manager for handling players.
+     */
     private PlayersManager playersManager;
 
     /**
@@ -26,9 +32,9 @@ public class EnlistPlayer {
         System.out.println("Enlisting a new player...");
         // Logic to enlist a new player
         System.out.print("Enter first name: ");
-        String firstName = input.nextLine();
+        final String firstName = input.nextLine();
         System.out.print("Enter last name: ");
-        String lastName = input.nextLine();
+        final String lastName = input.nextLine();
         System.out.print("Enter birth date (DD/MM/YYYY): ");
         LocalDate birthDate = null;
         while (birthDate == null) {
@@ -40,7 +46,7 @@ public class EnlistPlayer {
             }
         }
         System.out.print("Enter nationality: ");
-        String nationality = input.nextLine();
+        final String nationality = input.nextLine();
 
         int jerseyNumber = -1;
         while (jerseyNumber == -1) {
@@ -52,13 +58,15 @@ public class EnlistPlayer {
             }
         }
 
-        EnumMap<Ability, Integer> skillMap = new EnumMap<>(Ability.class);
+        final EnumMap<Ability, Integer> skillMap = new EnumMap<>(Ability.class);
 
+        final int minSkillValue = 1;
+        final int maxSkillValue = 10;
         for (Ability ability : Ability.values()) {
-            System.out.print("Enter value for " + ability + " (1-10): ");
-            int value = Integer.parseInt(input.nextLine());
+            System.out.print("Enter value for " + ability + " (" + minSkillValue + "-" + maxSkillValue + "): ");
+            final int value = Integer.parseInt(input.nextLine());
 
-            if (value < 1 || value > 10) {
+            if (value < minSkillValue || value > maxSkillValue) {
                 System.out.println("Invalid value for " + ability + ". Player not enlisted.");
                 return;
             }
@@ -66,7 +74,7 @@ public class EnlistPlayer {
             skillMap.put(ability, value);
         }
 
-        Player player = new Player();
+        final Player player = new Player();
         player.setFirstName(firstName);
         player.setLastName(lastName);
         player.setBirthDate(birthDate);

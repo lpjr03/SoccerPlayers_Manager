@@ -11,11 +11,34 @@ import lombok.Data;
  */
 @Data
 public class Player implements Serializable {
+    /**
+     * First name of the player.
+     */
     private String firstName;
+
+    /**
+     * Last name of the player.
+     */
     private String lastName;
+
+    /**
+     * Birth date of the player.
+     */
     private LocalDate birthDate;
+
+    /**
+     * Nationality of the player.
+     */
     private String nationality;
+
+    /**
+     * Jersey number of the player.
+     */
     private int jerseyNumber;
+
+    /**
+     * Abilities of the player.
+     */
     private EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
 
     /**
@@ -24,7 +47,7 @@ public class Player implements Serializable {
      * @return a JSON representation of the player's abilities
      */
     public String abilitiesToJson() {
-        StringBuilder json = new StringBuilder("{");
+        final StringBuilder json = new StringBuilder("{");
         int count = 0;
         for (var entry : abilities.entrySet()) {
             json.append("\"")

@@ -9,10 +9,24 @@ import it.unimol.player_manager.persistence.SerializeManager;
 /**
  * Main menu class for the Player Manager application.
  */
-public class MainMenu {
+public final class MainMenu {
+    /** Singleton instance. */
     private static MainMenu instance;
-    public static Scanner input;
+
+    /** Scanner for user input. */
+    private static Scanner input;
+
+    /** Manager for handling players. */
     private PlayersManager playersManager;
+
+    /**
+     * Returns the scanner for user input.
+     * 
+     * @return the scanner
+     */
+    public static Scanner getInput() {
+        return input;
+    }
 
     /**
      * Private constructor to prevent instantiation from outside the class.
@@ -43,7 +57,7 @@ public class MainMenu {
         do {
             this.showOptions();
             System.out.println("Choose an option: ");
-            int option = Integer.parseInt(input.nextLine());
+            final int option = Integer.parseInt(input.nextLine());
             exit = this.handleOption(option);
         } while (!exit);
         System.out.println("Exiting Player Manager. Goodbye!");
@@ -67,12 +81,16 @@ public class MainMenu {
      * @param option the selected option
      * @return true if the application should exit, false otherwise
      */
-    private boolean handleOption(int option) {
+    private boolean handleOption(final int option) {
+        final int ENLIST_OPTION = 1;
+        final int REMOVE_OPTION = 2;
+        final int PRINT_OPTION = 3;
+        final int EXIT_OPTION = 4;
         switch (option) {
-            case 1 -> new EnlistPlayer(input, playersManager).execute();
-            case 2 -> new RemovePlayer(input, playersManager).execute();
-            case 3 -> new PrintTeamAndScores(input, playersManager).execute();
-            case 4 -> {
+            case ENLIST_OPTION -> new EnlistPlayer(input, playersManager).execute();
+            case REMOVE_OPTION -> new RemovePlayer(input, playersManager).execute();
+            case PRINT_OPTION -> new PrintTeamAndScores(input, playersManager).execute();
+            case EXIT_OPTION -> {
                 return true;
             }
             default -> System.out.println("Invalid option. Please try again.");

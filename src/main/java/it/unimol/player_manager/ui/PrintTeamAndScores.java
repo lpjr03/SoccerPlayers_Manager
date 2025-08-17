@@ -11,15 +11,21 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PrintTeamAndScores {
 
+    /**
+     * Scanner instance used for receiving user input.
+     */
     private Scanner input;
 
+    /**
+     * Manager responsible for handling player data and operations.
+     */
     private PlayersManager playersManager;
 
     /**
      * Executes the process of printing the team and scores.
      */
     public void execute() {
-        
+
     }
 
 }

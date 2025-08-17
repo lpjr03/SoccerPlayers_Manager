@@ -14,8 +14,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RemovePlayer {
 
+
+    /**
+     * Scanner for user input.
+     */
     private Scanner input;
 
+    /**
+     * Manager for handling players.
+     */
     private PlayersManager playersManager;
 
     /**
@@ -39,7 +46,7 @@ public class RemovePlayer {
             }
         }
         try {
-            Player removedPlayer = playersManager.getPlayerByJersey(jerseyNumber);
+            final Player removedPlayer = playersManager.getPlayerByJersey(jerseyNumber);
             if (removedPlayer == null) {
                 System.out.println("Player not found.");
             } else {
