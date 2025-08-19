@@ -1,7 +1,6 @@
 package it.unimol.player_manager.app;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 import it.unimol.player_manager.entity.Player;
 import it.unimol.player_manager.exceptions.EmptyManagerException;
@@ -42,7 +41,7 @@ public final class PlayersManager implements Serializable {
 
     /**
      * Private constructor to prevent instantiation from outside the class.
-    */
+     */
     private PlayersManager() {
         this.nextId = 0;
         this.players = new java.util.HashMap<>();

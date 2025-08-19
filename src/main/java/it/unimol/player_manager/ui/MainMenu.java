@@ -71,8 +71,7 @@ public final class MainMenu {
     private void showOptions() {
         System.out.println("F1: Enlist player");
         System.out.println("F2: Remove player");
-        System.out.println("F3: Print team and scores");
-        System.out.println("F4: Exit");
+        System.out.println("F3: Exit");
     }
 
     /**
@@ -84,12 +83,10 @@ public final class MainMenu {
     private boolean handleOption(final int option) {
         final int ENLIST_OPTION = 1;
         final int REMOVE_OPTION = 2;
-        final int PRINT_OPTION = 3;
-        final int EXIT_OPTION = 4;
+        final int EXIT_OPTION = 3;
         switch (option) {
             case ENLIST_OPTION -> new EnlistPlayer(input, playersManager).execute();
             case REMOVE_OPTION -> new RemovePlayer(input, playersManager).execute();
-            case PRINT_OPTION -> new PrintTeamAndScores(input, playersManager).execute();
             case EXIT_OPTION -> {
                 return true;
             }
