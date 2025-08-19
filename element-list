@@ -1,0 +1,6 @@
+it.unimol.player_manager
+it.unimol.player_manager.app
+it.unimol.player_manager.entity
+it.unimol.player_manager.exceptions
+it.unimol.player_manager.persistence
+it.unimol.player_manager.ui
