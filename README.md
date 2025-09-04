@@ -1,6 +1,6 @@
 # Football Team Backend
 
-This project is a simple **Java backend (NOT SpringBoot)** that manages the insertion and deletion of soccer players in a team. It uses **PostgreSQL** as the database and **pgAdmin** for database management.
+This project is a simple **Java application** that manages the insertion and deletion of soccer players in a team. It uses **PostgreSQL** as the database and **pgAdmin** for database management.
 In addition, **Java serialization** has been implemented to handle the persistence of player objects.
 
 
